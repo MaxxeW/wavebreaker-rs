@@ -55,26 +55,26 @@ use crate::{
 };
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)] // Add Debug here
 struct Config {
     main: Main,
     radio: Radio,
     external: External,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)] // Add Debug here
 struct Main {
     address: String,
     database: String,
     redis: String,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)] // Add Debug here
 struct Radio {
     cgr_location: String,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)] // Add Debug here
 struct External {
     steam_key: String,
     steam_realm: String,
@@ -146,7 +146,7 @@ async fn init_state() -> anyhow::Result<AppState> {
 
     Ok(AppState {
         steam_api: Arc::new(Steam::new(&wavebreaker_config.external.steam_key)),
-        config: Arc::new(wavebreaker_config),
+        config: Arc::new(wavebreaker_config.clone()), // Clone the config here
         db: pool,
         redis: redis_pool,
     })
